@@ -9,15 +9,11 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-/**
- *
- * @author HTC
- */
-public class Ussd extends Api{
-    
+public class Ussd extends Api {
+
     JSONArray jsonArray;
-    
-        public Ussd saldo(String option, String value) throws UnirestException {
+
+    public Ussd saldo(String option, String value) throws UnirestException {
         String response = metodos.post(value);
         response = response.replace("{\"MENU\":[\"", "[");
         response = response.replace("\"]}", "]");
@@ -32,9 +28,9 @@ public class Ussd extends Api{
 
         }
         return this;
-}
-        
-        public void salirDelMenu(JSONArray json) throws UnirestException {
+    }
+
+    public void salirDelMenu(JSONArray json) throws UnirestException {
         for (int i = 0; i < jsonArray.length(); i++) {
             String objeto = jsonArray.optJSONObject(i).toString();
             JSONObject jsonObj = new JSONObject(objeto);
@@ -44,6 +40,6 @@ public class Ussd extends Api{
             }
 
         }
+
     }
 }
-
