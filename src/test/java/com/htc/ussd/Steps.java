@@ -1,7 +1,14 @@
 package com.htc.ussd;
 
 import com.thoughtworks.gauge.Step;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import java.nio.file.*;
 import com.mashape.unirest.http.exceptions.UnirestException;
+
+import java.io.File;
 import java.io.IOException;
 
 
@@ -25,4 +32,10 @@ public class Steps {
         service.goSms().envioSmS(number, text);
 
     }
+
+    @Step("Prueba 1")
+    public void pruebaUno() throws Exception{
+        service.formatMenu();
+    }
+
 }

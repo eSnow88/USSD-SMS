@@ -9,6 +9,9 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.IOException;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
 import com.htc.ussd.Ussd;
 
 /**
@@ -20,8 +23,16 @@ public class Api {
     public String id;
     JSONArray jsonArray;
     UnirestMethods metodos = new UnirestMethods();
-    
-    
+    private WebDriver driver;
+   
+
+    public Api(){
+        System.setProperty("webdriver.chrome.driver", "driver/chromedriver.exe");
+        WebDriver driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.navigate().to("http://127.0.0.1:5500/web/");
+    }
+
     public String principalMenuUssd(String value) throws UnirestException {
         String response = metodos.post(value);
         response = response.replace("{\"MENU\":[\"", "[");
