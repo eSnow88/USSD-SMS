@@ -2,8 +2,7 @@ package com.htc.ussd;
 
 import com.thoughtworks.gauge.Step;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+
 import org.openqa.selenium.remote.DesiredCapabilities;
 import java.nio.file.*;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -15,15 +14,27 @@ import java.io.IOException;
 public class Steps {
 
     private Api service = new Api();
+    Configuration config = new Configuration();
+    
+    public Steps(){
+        config.Driver();
+    }
+
+    @Step("Login a Servicio USSD con usuario: <username> y contrasena <password>")
+    public void loginUssd(String username, String password) throws UnirestException, IOException{
+        service.login(username, password);
+    }
+
+    
 
     @Step("Servicio USSD <ussdNumber>")
     public void menuPrincipal(String ussdNumber) throws UnirestException, IOException {
-       service.principalMenuUssd(ussdNumber);
+       service.principalMenuUssd2(ussdNumber);
     }
 
     @Step("consulta de <option> en USSD")
     public void metodoPruebaUssd(String option) throws UnirestException, IOException {
-        service.goUssd().saldo(option, service.id).salirDelMenu(service.jsonArray);
+        service.goUssd().saldo(option).salirDelMenu();
 
     }
 
