@@ -24,7 +24,7 @@ public class Api {
     public String id;
     JSONArray jsonArray;
     UnirestMethods metodos = new UnirestMethods();
-   
+
     public String url_ussd;
     public String url_sms;
     public String url_auth;
@@ -35,7 +35,6 @@ public class Api {
         url_sms = "http://192.168.1.36:8081/api/v1.0/sms/send";
         url_auth = "https://raspi.hightech-corp.com/api/v1.0/auth";
     }
-
 
     public void login(String username, String password) throws UnirestException {
         tokenSecurity = metodos.post(username, password, url_auth);
@@ -60,18 +59,18 @@ public class Api {
 
     public void principalMenuUssd2(String value) throws UnirestException {
         String response = metodos.postWithToken(value, url_ussd, tokenSecurity);
-        response = response.replace("\"MENU\":[\"", "\"table\":{\"rows\":[");
-        response = response.replace("\"]}", "]}}");
-        response = response.replace("'","\"");
-        try{
-        FileWriter file = new FileWriter("web\\db.json");
-			file.write(response);
-			file.flush();
+        try {
+            response = response.replace("\"MENU\":[\"", "\"table\":{\"rows\":[");
+            response = response.replace("\"]}", "]}}");
+            response = response.replace("'", "\"");
+            FileWriter file = new FileWriter("web\\db.json");
+            file.write(response);
+            file.flush();
             file.close();
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
-       
+
     }
 
     public Ussd goUssd() {
