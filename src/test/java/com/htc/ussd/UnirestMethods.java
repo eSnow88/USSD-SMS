@@ -27,6 +27,7 @@ public class UnirestMethods{
                 .body("{\"textsent\":\"" + value + "\"}")
                 .asString();
         String response = httpResponse.getBody();
+        System.out.println(response);
         return response;
     }
 
@@ -40,8 +41,8 @@ public class UnirestMethods{
         return response;
     }
 
-    public String post(String parameter, String parameter2) throws UnirestException {
-        HttpResponse<String> httpResponse = Unirest.post("")
+    public String post(String parameter, String parameter2, String token, String url) throws UnirestException {
+        HttpResponse<String> httpResponse = Unirest.post(url)
                 .header("Content-Type", "application/json")
                 .body("{\"phoneNumber\":\""+parameter+"\",\"textMessage\":\""+parameter2+"\"}")
                 .asString();

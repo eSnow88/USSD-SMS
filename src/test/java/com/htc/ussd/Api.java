@@ -1,34 +1,23 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.htc.ussd;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.IOException;
 import org.json.JSONArray;
-import org.json.JSONObject;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import java.io.FileWriter;
 
 import com.htc.ussd.Ussd;
 
-/**
- *
- * @author HTC
- */
 public class Api {
 
     public String id;
-    JSONArray jsonArray;
+    public JSONArray jsonArray;
     UnirestMethods metodos = new UnirestMethods();
 
     public String url_ussd;
     public String url_sms;
     public String url_auth;
     public String tokenSecurity;
+    private String response;
 
     public Api() {
         url_ussd = "https://raspi.hightech-corp.com/api/v1.0/ussds";
@@ -40,37 +29,17 @@ public class Api {
         tokenSecurity = metodos.post(username, password, url_auth);
     }
 
-    public String principalMenuUssd(String value) throws UnirestException {
+    public void principalMenuUssd(String value) throws UnirestException {
         String response = metodos.postWithToken(value, url_ussd, tokenSecurity);
-        response = response.replace("{\"MENU\":[\"", "[");
-        response = response.replace("\"]}", "]");
-        System.out.println("Cadena para array: " + response);
-        jsonArray = new JSONArray(response);
-        for (int i = 0; i < jsonArray.length(); i++) {
-            String objeto = jsonArray.optJSONObject(i).toString();
-            JSONObject jsonObj = new JSONObject(objeto);
+        JSONArray arrayMenu = formatMenuToJSONArray(response);
 
-            if (jsonObj.get("option").equals("Tu saldo")) {
-                id = jsonObj.get("id").toString();
-            }
-        }
-        return id;
-    }
+        // print Menu JSON in Terminal
+        System.out.println("USSD Menu Principal: ");
+        System.out.println(arrayMenu);
 
-    public void principalMenuUssd2(String value) throws UnirestException {
-        String response = metodos.postWithToken(value, url_ussd, tokenSecurity);
-        try {
-            response = response.replace("\"MENU\":[\"", "\"table\":{\"rows\":[");
-            response = response.replace("\"]}", "]}}");
-            response = response.replace("'", "\"");
-            FileWriter file = new FileWriter("web\\db.json");
-            file.write(response);
-            file.flush();
-            file.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        // This method send menu to HTML
+        formatMenuToHTML(response);
+        jsonArray = arrayMenu;
     }
 
     public Ussd goUssd() {
@@ -78,10 +47,46 @@ public class Api {
     }
 
     public Sms goSms() {
-        return new Sms();
+        return new Sms(url_sms, tokenSecurity);
     }
 
-    public void formatMenu() {
+    public String formatMenuToHTML(String response) {
+        try {
+            response = response.replace("\"MENU\":[\"", "\"table\":{\"rows\":[");
+            response = response.replace("\"]}", "]}}");
+            response = response.replace("'", "\"");
+            response = response.replace("\\\"", "");
+            response = response.replace("\"MENU\":\"{\"", "\"table\":{\"rows\":[{\"");
+            response = response.replace( "}\"}","}]}}");
+            response = response.replace( "id\":10","id\":\" \"");
+            FileWriter file = new FileWriter("web\\db.json");
+            file.write(response);
+            file.flush();
+            file.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return response;
+    }
 
+    public JSONArray formatMenuToJSONArray(String response) {
+        response = response.replace("{\"MENU\":[\"", "[");
+        response = response.replace("\"]}", "]");
+        response = response.replace("\\\"", "");
+        JSONArray jsonArrayMenu = new JSONArray(response);
+        return jsonArrayMenu;
+    }
+
+    public void close() {
+        Configuration conf = new Configuration();
+        try {
+            FileWriter file = new FileWriter("web\\db.json");
+            file.write("");
+            file.flush();
+            file.close();
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        conf.closeNavigation();
     }
 }

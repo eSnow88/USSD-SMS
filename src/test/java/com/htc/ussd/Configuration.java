@@ -11,4 +11,9 @@ public class Configuration{
         driver.manage().window().maximize();
         driver.navigate().to("http://127.0.0.1:5500/web/");
     }
+
+
+    public void closeNavigation(){
+        driver.close();
+    }
 }

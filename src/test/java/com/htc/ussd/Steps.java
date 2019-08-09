@@ -5,9 +5,12 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.IOException;
 
 
-public class Steps {
-
+public class Steps{
+    
     private Api service = new Api();
+    Ussd ussd = new Ussd();
+    
+
     Configuration config = new Configuration();
     
     public Steps(){
@@ -21,13 +24,12 @@ public class Steps {
 
     @Step("See Principal Menu in <ussd>")
     public void menuPrincipal(String ussdNumber) throws UnirestException, IOException {
-       service.principalMenuUssd2(ussdNumber);
+       service.principalMenuUssd(ussdNumber);
     }
 
     @Step("consulta de <option> en USSD")
     public void metodoPruebaUssd(String option) throws UnirestException, IOException {
-        service.goUssd().saldo(option).salirDelMenu();
-
+        service.goUssd().selectOptionMenu("Tu saldo", service.jsonArray).selectOptionMenu("Saldo Principal", ussd.jsonArray2).exitMenu();
     }
 
     @Step("Consulta de Saldo en SMS a <phoneNumber> con la palabra <textMessage>")
@@ -36,8 +38,8 @@ public class Steps {
     }
 
     @Step("Close Service")
-    public void pruebaUno() throws Exception{
-       
+    public void closeService() throws Exception{
+       service.close();
     }
 
 }

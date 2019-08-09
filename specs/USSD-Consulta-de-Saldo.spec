@@ -3,10 +3,10 @@
 *Consult USSD Service "*611#"
 
 ##consultar saldo
-*consulta de "Saldo Principal" en USSD
+*consulta de "Tu saldo" en USSD
 
 
 ____________________
 Teardown steps
 
-*Close Service
+Close Service
